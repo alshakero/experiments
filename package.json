@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
   "dev": "parcel serve index.html",
-  "build": "parcel build index.html --dist-dir build"
+  "build": "parcel build index.html --dist-dir build --public-url https://alshakero.github.io/experiments/",
+  "deploy": "npm run build && gh-pages -d build"
   },
   "dependencies": {
     "ammo.js": "^0.0.10",
@@ -14,6 +15,7 @@
     "three": "^0.179.1"
   },
   "devDependencies": {
+    "gh-pages": "^6.3.0",
     "parcel": "^2.15.4"
   }
 }
