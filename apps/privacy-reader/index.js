@@ -61,10 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
   updatePositions();
   window.addEventListener('resize', updatePositions);
 
-  // Mouse move handler
-  document.addEventListener('mousemove', (e) => {
-    const mx = e.clientX;
-    const my = e.clientY + window.scrollY;
+  // Mouse or accelerometer handler
+  let mx = window.innerWidth / 2;
+  let my = window.innerHeight / 2;
+
+  function revealAt(mx, my) {
     positions.forEach(({ span, x, y }, i) => {
       const dist = Math.hypot(mx - x, my - y);
       if (dist < circleSize && charData[i].ch !== '\n' && charData[i].ch !== ' ') {
@@ -75,5 +76,39 @@ document.addEventListener('DOMContentLoaded', () => {
         span.textContent = ' ';
       }
     });
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    mx = e.clientX;
+    my = e.clientY + window.scrollY;
+    revealAt(mx, my);
   });
+
+  // Accelerometer support for mobile
+  if (window.DeviceOrientationEvent) {
+    let lastX = window.innerWidth / 2;
+    let lastY = window.innerHeight / 2;
+    let baseBeta = null, baseGamma = null;
+
+    function handleOrientation(event) {
+      // gamma: left/right, beta: front/back
+      if (baseBeta === null) baseBeta = event.beta;
+      if (baseGamma === null) baseGamma = event.gamma;
+      // Sensitivity factor
+      const factor = 8;
+      let dx = (event.gamma - baseGamma) * factor;
+      let dy = (event.beta - baseBeta) * factor;
+      // Clamp to viewport
+      lastX = Math.max(0, Math.min(window.innerWidth, window.innerWidth / 2 + dx));
+      lastY = Math.max(0, Math.min(document.body.scrollHeight, window.scrollY + window.innerHeight / 2 + dy));
+      revealAt(lastX, lastY);
+    }
+
+    window.addEventListener('deviceorientation', handleOrientation, true);
+    // On touch, reset base orientation
+    window.addEventListener('touchstart', () => {
+      baseBeta = null;
+      baseGamma = null;
+    });
+  }
 });
