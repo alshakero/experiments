@@ -1,0 +1,19 @@
+{
+  "name": "three-js-cloth-simulation",
+  "version": "1.0.0",
+  "description": "Three.js WebGPU cloth simulation with verlet physics",
+  "type": "module",
+  "scripts": {
+  "dev": "parcel serve index.html",
+  "build": "parcel build index.html --dist-dir build"
+  },
+  "dependencies": {
+    "ammo.js": "^0.0.10",
+    "ammojs-typed": "^1.0.6",
+    "lil-gui": "^0.19.2",
+    "three": "^0.179.1"
+  },
+  "devDependencies": {
+    "parcel": "^2.15.4"
+  }
+}
